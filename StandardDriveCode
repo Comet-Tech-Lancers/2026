@@ -1,0 +1,87 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@TeleOp
+public class MecanumTeleOp extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+        
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
+
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        
+
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+       
+
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        while (opModeIsActive()) {
+        
+           
+            double r = Math.hypot(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+            double robotAngle = Math.atan2(gamepad1.left_stick_x, -gamepad1.left_stick_y) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
+            //rightX *= 2;
+            double v1 = r * Math.cos(robotAngle) + rightX;
+            double v2 = r * Math.sin(robotAngle) - rightX;
+            double v3 = r * Math.sin(robotAngle) + rightX;
+            double v4 = r * Math.cos(robotAngle) - rightX;
+            
+            double triggerPress = gamepad1.right_trigger;
+            boolean isRightBumperPressed = gamepad1.right_bumper;
+            
+            double powerMultiplier = 1;
+            
+            
+            if(rightX > 0)
+            {
+                v1 = Math.abs(v1);
+                v3 = -Math.abs(v3);
+                
+                v2 = Math.abs(v2);
+                v4 = -Math.abs(v4);
+            }
+            else if(rightX < 0)
+            {
+                v1 = -Math.abs(v1);
+                v3 = Math.abs(v3);
+                
+                v2 = -Math.abs(v2);
+                v4 = Math.abs(v4);
+            }
+            
+            frontLeftMotor.setPower(v1 * powerMultiplier);
+            frontRightMotor.setPower(v2 * powerMultiplier);
+            backLeftMotor.setPower(v3 * powerMultiplier);
+            backRightMotor.setPower(v4 * powerMultiplier);
+        
+
+            
+            telemetry.addData("Front_Left tgt pwr", "pwr: " + String.format("%.2f", v1));
+            telemetry.addData("Front_Right tgt pwr", "pwr: " + String.format("%.2f", v2));
+            telemetry.addData("Back_Left tgt pwr", "pwr: " + String.format("%.2f", v3));
+            telemetry.addData("Back_Right tgt pwr", "pwr: " + String.format("%.2f", v4));
+            telemetry.addData("RightTrigger power",  String.format("%.2f", triggerPress));
+            telemetry.addData("RightBumper pressed",isRightBumperPressed);
+            telemetry.update();
+        }
+    }
+}
+    
