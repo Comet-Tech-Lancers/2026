@@ -8,6 +8,6 @@ Ask Mr. Laan in person or message in the programmers section of the Microsoft Te
 Use StandardDriveCode file in the repository to access or update the Drive Train & Controller Code
 
 ## Autonomous Pathing Website
-Use the link here https://github.com/Comet-Tech-Lancers/2026
+Use the link here https://visualizer.pedropathing.com/
 
 
