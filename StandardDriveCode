@@ -78,6 +78,7 @@ public class MecanumTeleOp extends LinearOpMode {
             telemetry.addData("Front_Right tgt pwr", "pwr: " + String.format("%.2f", v2));
             telemetry.addData("Back_Left tgt pwr", "pwr: " + String.format("%.2f", v3));
             telemetry.addData("Back_Right tgt pwr", "pwr: " + String.format("%.2f", v4));
+// we might not need the right bumper and right trigger this year
             telemetry.addData("RightTrigger power",  String.format("%.2f", triggerPress));
             telemetry.addData("RightBumper pressed",isRightBumperPressed);
             telemetry.update();
