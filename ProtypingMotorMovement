@@ -6,12 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp
-public class MecanumTeleOp extends LinearOpMode {
+public class PrototypingMotorMovement extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-    ShotTest1.setDirection(DcMotorSimple.Direction.FORWARD);
-    ShotTest1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+DcMotor ShotTest1 = hardwareMap.dcMotor.get("ShotTest1");
+ShotTest1.setDirection(DcMotorSimple.Direction.FORWARD);
+ShotTest1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
  waitForStart();
         if (isStopRequested()) return;
@@ -21,11 +22,11 @@ public class MecanumTeleOp extends LinearOpMode {
             double leftTrigger = gamepad2.left_trigger;
             
             if (leftTrigger != 0) {
-                if(whatServo == "top"){
                     ShotTest1.setPower(leftTrigger);
-                }
             } else {
                 ShotTest1.setPower(0);
             
             }
+    }
+}
 }
