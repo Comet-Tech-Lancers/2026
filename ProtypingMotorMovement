@@ -1,0 +1,31 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@TeleOp
+public class MecanumTeleOp extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+    ShotTest1.setDirection(DcMotorSimple.Direction.FORWARD);
+    ShotTest1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+ waitForStart();
+        if (isStopRequested()) return;
+
+        while (opModeIsActive()) {
+        
+            double leftTrigger = gamepad2.left_trigger;
+            
+            if (leftTrigger != 0) {
+                if(whatServo == "top"){
+                    ShotTest1.setPower(leftTrigger);
+                }
+            } else {
+                ShotTest1.setPower(0);
+            
+            }
+}
