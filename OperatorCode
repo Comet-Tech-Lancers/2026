@@ -1,0 +1,89 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@TeleOp
+public class MecanumTeleOp extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+         // Declare our motors
+        // Make sure your ID's match your config
+
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
+        DcMotor intake = hardwareMap.dcMotor.get("intake");
+      
+        backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        
+    waitForStart();
+        if (isStopRequested()) return;
+
+        while (opModeIsActive()) {
+        
+            boolean rightBumper = gamepad2.right_bumper
+            boolean rightBumperPress
+
+            if (rightBumper == true) {
+              rightBumperPress = true;
+            } else { 
+              rightBumperPress = false
+            }    
+
+            if (rightBumperPress == true) {
+              intake.setPower(100.0)
+            } else {
+              intake.setPower(0.0)
+            }
+
+            double powerMultiplier = 1;
+            
+            if(rightX > 0)
+            {
+                v1 = Math.abs(v1);
+                v3 = -Math.abs(v3);
+                
+                v2 = Math.abs(v2);
+                v4 = -Math.abs(v4);
+            }
+            else if(rightX < 0)
+            {
+                v1 = -Math.abs(v1);
+                v3 = Math.abs(v3);
+                
+                v2 = -Math.abs(v2);
+                v4 = Math.abs(v4);
+            }
+            
+            frontLeftMotor.setPower(v1 * powerMultiplier);
+            frontRightMotor.setPower(v2 * powerMultiplier);
+            backLeftMotor.setPower(v3 * powerMultiplier);
+            backRightMotor.setPower(v4 * powerMultiplier);
+        
+
+            
+            telemetry.addData("Front_Left tgt pwr", "pwr: " + String.format("%.2f", v1));
+            telemetry.addData("Front_Right tgt pwr", "pwr: " + String.format("%.2f", v2));
+            telemetry.addData("Back_Left tgt pwr", "pwr: " + String.format("%.2f", v3));
+            telemetry.addData("Back_Right tgt pwr", "pwr: " + String.format("%.2f", v4));
+            telemetry.addData("rightBumper pressed",rightBumperPressed);
+            telemetry.update();
+        }
+    }
+}
