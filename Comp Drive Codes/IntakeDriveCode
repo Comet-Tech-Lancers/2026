@@ -103,9 +103,9 @@ public class MecanumTeleOp extends LinearOpMode {
             backRightMotor.setPower(v4 * powerMultiplier);
         
             if (currentButtonState = true) {
-                displayState = On
+                displayState = "On";
             } else {
-                displayState = Off
+                displayState = "Off";
             }
        
             //Display data
