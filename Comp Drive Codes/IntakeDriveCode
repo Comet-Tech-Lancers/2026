@@ -1,40 +1,59 @@
 package org.firstinspires.ftc.teamcode;
 
+//DO NOT REMOVE (hardware import)
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp
-public class OperatorCode extends LinearOpMode {
+public class MecanumTeleOp extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-         // Declare our motors
-        // Make sure your ID's match your config
 
-
+        //Motor setup
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
         DcMotor intake = hardwareMap.dcMotor.get("intake");
-     
+
+        //Motor Direction !Important!
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intake.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        //Zero pwr behaviour, you probably want to set it to brake
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        
+
+        //var creation (we dont want em in the loop)
         boolean buttonPressLastLoop = false;
         boolean toggleState = false;
-            
-    waitForStart();
+        String displayState;
+       
+
+        //Loop; you probably don't want to remove it (unless you wanna start from scratch)
+        waitForStart();
+
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
 
-         boolean currentButtonState = gamepad2.right_bumper;
+            //intake math
+            boolean currentButtonState = gamepad2.right_bumper;
         
             if (currentButtonState && !buttonPressLastLoop) {
               toggleState = !toggleState;
             }    
-            
+
+            //intake activation
             if (toggleState) {
                 intake.setPower(100.0);
             } else {
@@ -42,10 +61,61 @@ public class OperatorCode extends LinearOpMode {
             }
             buttonPressLastLoop = currentButtonState;
 
-            double powerMultiplier = 1;
 
-            telemetry.addData("current state", currentButtonState);
-            telemetry.addData("last loop",buttonPressLastLoop);
+
+            //Controller Stick Setup
+            double r = Math.hypot(-gamepad1.left_stick_y, gamepad1.left_stick_x);
+            double robotAngle = Math.atan2(gamepad1.left_stick_x, -gamepad1.left_stick_y) - Math.PI / 4;
+            double rightX = gamepad1.right_stick_x;
+            //rightX *= 2;
+            double v1 = r * Math.cos(robotAngle) + rightX;
+            double v2 = r * Math.sin(robotAngle) - rightX;
+            double v3 = r * Math.sin(robotAngle) + rightX;
+            double v4 = r * Math.cos(robotAngle) - rightX;
+            
+            double triggerPress = gamepad1.right_trigger;
+            boolean isRightBumperPressed = gamepad1.right_bumper;
+            
+            double powerMultiplier = 1;
+            
+            
+            if(rightX > 0)
+            {
+                v1 = Math.abs(v1);
+                v3 = -Math.abs(v3);
+                
+                v2 = Math.abs(v2);
+                v4 = -Math.abs(v4);
+            }
+            else if(rightX < 0)
+            {
+                v1 = -Math.abs(v1);
+                v3 = Math.abs(v3);
+                
+                v2 = -Math.abs(v2);
+                v4 = Math.abs(v4);
+            }
+
+            //Motor calculation don't delete
+            frontLeftMotor.setPower(v1 * powerMultiplier);
+            frontRightMotor.setPower(v2 * powerMultiplier);
+            backLeftMotor.setPower(v3 * powerMultiplier);
+            backRightMotor.setPower(v4 * powerMultiplier);
+        
+            if (currentButtonState = true) {
+                displayState = On
+            } else {
+                displayState = Off
+            }
+       
+            //Display data
+            telemetry.addData("Front Left pwr: " + String.format("%.2f", v1));
+            telemetry.addData("Front Right pwr: " + String.format("%.2f", v2));
+            telemetry.addData("Back Left pwr: " + String.format("%.2f", v3));
+            telemetry.addData("Back Right pwr" + String.format("%.2f", v4));
+            telemetry.addData("intake" + displayState);
             telemetry.update();
         }
     }
+}
+    
