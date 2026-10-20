@@ -42,7 +42,6 @@ public class OperatorCode extends LinearOpMode {
             }
             buttonPressLastLoop = currentButtonState;
 
-            double powerMultiplier = 1;
 
             telemetry.addData("current state", currentButtonState);
             telemetry.addData("last loop",buttonPressLastLoop);
