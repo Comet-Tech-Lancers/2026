@@ -109,11 +109,11 @@ public class MecanumTeleOp extends LinearOpMode {
             }
        
             //Display data
-            telemetry.addData("Front Left pwr: " + String.format("%.2f", v1));
-            telemetry.addData("Front Right pwr: " + String.format("%.2f", v2));
-            telemetry.addData("Back Left pwr: " + String.format("%.2f", v3));
-            telemetry.addData("Back Right pwr" + String.format("%.2f", v4));
-            telemetry.addData("intake" + displayState);
+            telemetry.addData("Front Left pwr: ", v1);
+            telemetry.addData("Front Right pwr: ", v2);
+            telemetry.addData("Back Left pwr: ", v4);
+            telemetry.addData("Back Right pwr", v4);
+            telemetry.addData("intake", displayState);
             telemetry.update();
         }
     }
