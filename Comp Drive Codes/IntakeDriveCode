@@ -34,10 +34,20 @@ public class MecanumTeleOp extends LinearOpMode {
         intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //var creation (we dont want em in the loop)
-        boolean buttonPressLastLoop = false;
-        boolean toggleState = false;
-        String displayState;
-       
+        boolean buttonPressLastLoopIntake = false;
+        boolean toggleStateIntake = false;
+        boolean currentButtonStateIntake;
+        String displayStateIntake;
+        //boolean buttonPressLastLoopFW = false;
+        //boolean toggleStateFW = false;
+        //boolean currentButtonStateFW;
+        //String displayStateFW;
+        //double fwPreset = ?;
+        //double tempPreset = fwPreset;
+        //boolean b;
+        //boolean a;
+        boolean up;
+        boolean down;
 
         //Loop; you probably don't want to remove it (unless you wanna start from scratch)
         waitForStart();
@@ -45,21 +55,50 @@ public class MecanumTeleOp extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive()) {
-
+            
             //intake math
-            boolean currentButtonState = gamepad2.right_bumper;
-        
-            if (currentButtonState && !buttonPressLastLoop) {
-              toggleState = !toggleState;
+            currentButtonStateIntake = gamepad2.y;
+            up = gamepad2.dpad_up;
+            down = gamepad2.dpad_down;
+            
+            if (currentButtonStateIntake && !buttonPressLastLoopIntake) {
+              toggleStateIntake = !toggleStateIntake;
             }    
-
+            
+            //intake set
+            if (currentButtonStateIntake == true && (up == true || down == true)) {
+                if (up == true) {
+                    intake.setDirection(DcMotorSimple.Direction.FORWARD);
+                }
+                if (down == true) {
+                    intake.setDirection(DcMotorSimple.Direction.REVERSE);
+                }
+            }
+            
             //intake activation
-            if (toggleState) {
+            if (toggleStateIntake) {
                 intake.setPower(100.0);
             } else {
                 intake.setPower(0.0);
             }
-            buttonPressLastLoop = currentButtonState;
+            buttonPressLastLoopIntake = currentButtonStateIntake;
+
+            //Flywheel math 
+            /* currentButtonStateFW = gamepad2.left_bumper;
+            b = gamepad2.b;
+            a = gamepad2.a;
+        
+            if (currentButtonStateFW && !buttonPressLastLoopFW) {
+              toggleStateFW = !toggleStateFW;
+            }    
+
+            //Flywheel activation
+            if (toggleStateFW) {
+                PLACEHOLDER.setPower(tempPreset);
+            } else {
+                PLACEHOLDER.setPower(0.0);
+            }
+            buttonPressLastLoopFW = currentButtonStateFW; */
 
 
 
@@ -73,11 +112,7 @@ public class MecanumTeleOp extends LinearOpMode {
             double v3 = r * Math.sin(robotAngle) + rightX;
             double v4 = r * Math.cos(robotAngle) - rightX;
             
-            double triggerPress = gamepad1.right_trigger;
-            boolean isRightBumperPressed = gamepad1.right_bumper;
-            
             double powerMultiplier = 1;
-            
             
             if(rightX > 0)
             {
@@ -102,18 +137,27 @@ public class MecanumTeleOp extends LinearOpMode {
             backLeftMotor.setPower(v3 * powerMultiplier);
             backRightMotor.setPower(v4 * powerMultiplier);
         
-            if (currentButtonState = true) {
-                displayState = "On";
+            //Intake Display
+            if (currentButtonStateIntake = true) {
+                displayStateIntake = "On";
             } else {
-                displayState = "Off";
+                displayStateIntake = "Off";
             }
+            
+            //Flywheel Display
+            /*if (currentButtonStateFW = true) {
+                displayStateFW = "On";
+            } else {
+                displayStateFW = "Off";
+            }*/
        
             //Display data
             telemetry.addData("Front Left pwr: ", v1);
             telemetry.addData("Front Right pwr: ", v2);
             telemetry.addData("Back Left pwr: ", v4);
             telemetry.addData("Back Right pwr", v4);
-            telemetry.addData("intake", displayState);
+            telemetry.addData("intake ", displayStateIntake);
+            //telemetry.addData("flywheel ", displayStateFW);
             telemetry.update();
         }
     }
