@@ -1,0 +1,91 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.pedropathing.follower.Follower;
+import static com.pedropathing.api.Paths.*;
+import com.pedropathing.api.Paths;
+import com.pedropathing.api.PoseFactory;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
+
+@Autonomous(name = "PedroSingleAuto", group = "Autonomous")
+public class PedroSingleAuto extends LinearOpMode {
+
+    private Follower follower;
+    
+    // 1. Declare your intake motor here at the top
+    private DcMotor intake;
+
+    // --- YOUR GENERATED PATH DATA ---
+    private final PoseFactory poseFactory = PoseFactory.degrees();
+    private final Pose start = poseFactory.of(56, 8, 90);
+    private final Pose path1Pose = poseFactory.of(56, 20, 180);
+    private final Pose point2 = poseFactory.of(8, 20, 180);
+    private final Pose point3 = poseFactory.of(8, 0, -90);
+    private final Pose point4 = poseFactory.of(56, 30, -147.9946);
+    private final Pose point5 = poseFactory.of(56, 30, 180);
+    private final Pose point6 = poseFactory.of(56, 31, -90);
+
+    // --- YOUR PATH GENERATORS ---
+    public Path path1() { return Paths.line(start, path1Pose).linear(start, path1Pose); }
+    public Path path2() { return Paths.line(path1Pose, point2).tangent(); }
+    public Path path3() { return Paths.line(point2, point3).tangent(); }
+    public Path path4() { return Paths.line(point3, point4).reverseTangent(); }
+    public Path path5() { return Paths.line(point4, point5).reverseTangent(); }
+    public Path path6() { return Paths.line(point5, point6).reverseTangent(); }
+
+    @Override
+    public void runOpMode() {
+        // Initialize Pedro Pathing (handles frontLeft, frontRight, backLeft, backRight automatically!)
+        follower = new Follower(hardwareMap);
+        follower.setStartingPose(start);
+
+        // 2. Setup your intake motor hardware mapping and settings right here
+        intake = hardwareMap.dcMotor.get("intake");
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        telemetry.addData("Status", "Initialized. Ready to run!");
+        telemetry.update();
+
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        // Run Path 1 
+        follower.followPath(path1());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+
+        // --- EXAMPLE: Turning the intake on between paths ---
+        intake.setPower(1.0); // Starts spinning the intake
+
+        // Run Path 2
+        follower.followPath(path2());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+
+        // --- EXAMPLE: Turning the intake off ---
+        intake.setPower(0.0); // Stops the intake
+
+        // Run Path 3
+        follower.followPath(path3());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+
+        // Run Path 4
+        follower.followPath(path4());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+
+        // Run Path 5
+        follower.followPath(path5());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+
+        // Run Path 6
+        follower.followPath(path6());
+        while (opModeIsActive() && follower.isBusy()) { follower.update(); }
+        
+        telemetry.addData("Status", "Autonomous Complete!");
+        telemetry.update();
+    }
+}
