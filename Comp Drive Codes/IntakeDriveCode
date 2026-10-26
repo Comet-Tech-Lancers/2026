@@ -45,7 +45,9 @@ public class MecanumTeleOp extends LinearOpMode {
         //double fwPreset = ?;
         //double tempPreset = fwPreset;
         //boolean b;
-        //boolean a;
+        //boolean lwrIntake;
+        //boolean x;
+        //double shooterPwr;
         boolean up;
         boolean down;
 
@@ -86,11 +88,22 @@ public class MecanumTeleOp extends LinearOpMode {
             //Flywheel math 
             /* currentButtonStateFW = gamepad2.left_bumper;
             b = gamepad2.b;
-            a = gamepad2.a;
+            lwrIntake = gamepad2.right_bumper;
+            shooterPwr = gamepad2.left_trigger;
         
             if (currentButtonStateFW && !buttonPressLastLoopFW) {
               toggleStateFW = !toggleStateFW;
             }    
+            
+            //Flywheel preset encode
+            if (shooterPwr != 0 && (b == true)){
+                tempPreset = shooterPwr;
+            }
+            
+            //Flywheel preset erase
+            if (x == true) {
+                tempPreset = fwPreset;
+            }
 
             //Flywheel activation
             if (toggleStateFW) {
