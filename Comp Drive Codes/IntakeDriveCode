@@ -58,16 +58,17 @@ public class MecanumTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             
-            //intake math
+            //intake mapping
             currentButtonStateIntake = gamepad2.y;
             up = gamepad2.dpad_up;
             down = gamepad2.dpad_down;
-            
+
+            //intake math
             if (currentButtonStateIntake && !buttonPressLastLoopIntake) {
               toggleStateIntake = !toggleStateIntake;
             }    
             
-            //intake set
+            //intake direction set
             if (currentButtonStateIntake == true && (up == true || down == true)) {
                 if (up == true) {
                     intake.setDirection(DcMotorSimple.Direction.FORWARD);
