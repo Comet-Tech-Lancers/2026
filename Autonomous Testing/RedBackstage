@@ -1,0 +1,48 @@
+package org.firstinspires.ftc.teamcode.OpModes.Autonomous;
+
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.Robot;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+
+@Autonomous(name="Red Backstage RoadRunner", group="Autonomous")
+public class RedBackstage extends LinearOpMode {
+    
+    // Create the robot instance
+    public Robot robot;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        // 1. Initialize your custom Robot class with the active hardwareMap
+        // (Assuming your Robot constructor handles hardwareMap internally or has an init method)
+        robot = new Robot();
+        // If your Robot class requires an initialization method, call it here, e.g., robot.init(hardwareMap);
+
+        // 2. Define the starting position matching your trajectory builder
+        Pose2d startPose = new Pose2d(-37.19, -61.60, Math.toRadians(90.00));
+        robot.nav.setPoseEstimate(startPose);
+
+        // 3. Build your mapped out trajectory sequence
+        TrajectorySequence untitled0 = robot.nav.trajectorySequenceBuilder(startPose)
+                .splineTo(new Vector2d(-38.06, -45.71), Math.toRadians(90.00))
+                .splineTo(new Vector2d(-16.25, -36.18), Math.toRadians(-13.56))
+                .splineTo(new Vector2d(-1.66, -36.90), Math.toRadians(4.13))
+                .splineTo(new Vector2d(12.35, -35.46), Math.toRadians(-1.36))
+                .splineTo(new Vector2d(33.73, -53.51), Math.toRadians(-48.52))
+                .splineTo(new Vector2d(61.02, -59.58), Math.toRadians(5.88))
+                .build();
+
+        // Wait for the match to start
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        if (opModeIsActive()) {
+            // 4. Tell RoadRunner to execute the trajectory sequence
+            robot.nav.followTrajectorySequence(untitled0);
+        }
+    }
+}
