@@ -1,0 +1,75 @@
+package org.firstinspires.ftc.teamcode;
+
+//DO NOT REMOVE (hardware import)
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+@TeleOp
+public class MecanumTeleOp extends LinearOpMode {
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        //Motor setup
+        DcMotor frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        DcMotor backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        DcMotor frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        DcMotor backRightMotor = hardwareMap.dcMotor.get("backRight");
+        DcMotor intake = hardwareMap.dcMotor.get("intake");
+        DcMotor feed = hardwareMap.dcMotor.get("feed");
+
+        //Motor Direction !Important!
+        backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intake.setDirection(DcMotorSimple.Direction.FORWARD);
+        feed.setDirection(DcMotorSimple.Direction.FORWARD);
+        
+
+        //Zero pwr behaviour, you probably want to set it to brake
+        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        intake.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        feed.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //var creation (we dont want em in the loop)
+        boolean buttonPressLastLoopIntake = false;
+        boolean toggleStateIntake = false;
+        boolean currentButtonStateIntake;
+        String displayStateIntake;
+        //boolean buttonPressLastLoopFW = false;
+        //boolean toggleStateFW = false;
+        //boolean currentButtonStateFW;
+        //String displayStateFW;
+        //double fwPreset = ?;
+        //double tempPreset = fwPreset;
+        //boolean b;
+        //boolean lwrIntake;
+        //boolean x;
+        //double shooterPwr;
+        boolean up;
+        boolean down;
+
+        //Loop; you probably don't want to remove it (unless you wanna start from scratch)
+        waitForStart();
+
+        if (isStopRequested()) return;
+
+        while (opModeIsActive()) {
+          
+            //feed motor stuff
+            if (gamepad2.a == true) {
+                feed.setPower(50.0);
+            } else {
+                feed.setPower(0.0);
+            }
+
+           }
+    }
+}
+    
